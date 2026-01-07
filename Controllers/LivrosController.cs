@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using GestaoDeLivros.models;
+using GestaoDeLivros.Data;
 
 namespace GestaoDeLivros.Controllers
 {
@@ -7,21 +9,24 @@ namespace GestaoDeLivros.Controllers
     [Route("api/[controller]")]
     public class LivrosController : ControllerBase
     {
-        private static List<Livro> livros = new List<Livro>
-        {
+        private readonly AppDbContext _context;
 
-        };
+        public LivrosController(AppDbContext context)
+        {
+            _context = context;
+        }
 
         [HttpGet]
-        public ActionResult<List<Livro>> GetALL()
+        public async Task<ActionResult<List<Livro>>> GetAll()
         {
+            var livros = await _context.Livros.ToListAsync();
             return Ok(livros);
         }
         
         [HttpGet("{id}")]
-        public ActionResult<Livro> GetById(int id)
+        public async Task<ActionResult<Livro>> GetById(int id)
         {
-            var livro = livros.FirstOrDefault(l => l.Id == id);
+            var livro = await _context.Livros.FindAsync(id);
 
             if (livro == null)
             {
@@ -32,20 +37,19 @@ namespace GestaoDeLivros.Controllers
         }
 
         [HttpPost]
-        public ActionResult<Livro> Create([FromBody] Livro novoLivro)
+        public async Task<ActionResult<Livro>> Create([FromBody] Livro novoLivro)
         {
-            novoLivro.Id = livros.Any() ? livros.Max(l => l.Id) + 1 : 1;
-
-            livros.Add(novoLivro);
+            _context.Livros.Add(novoLivro);
+            await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetById), new { id = novoLivro.Id }, novoLivro);
 
         }
 
         [HttpPut("{id}")]
-        public ActionResult Uptade(int id, [FromBody] Livro livroAtualizado)
+        public async Task<ActionResult> Update(int id, [FromBody] Livro livroAtualizado)
         {
-            var livro = livros.FirstOrDefault(l => l.Id == id);
+            var livro = await _context.Livros.FindAsync(id);
 
             if (livro == null)
             {
@@ -61,20 +65,23 @@ namespace GestaoDeLivros.Controllers
             livro.ISBN = livroAtualizado.ISBN;
             livro.Resumo = livroAtualizado.Resumo;
 
+            await _context.SaveChangesAsync();
+
             return Ok(livro);
         }
 
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            var livro = livros.FirstOrDefault(l => l.Id == id);
-
+            var livro = await _context.Livros.FindAsync(id);
             if (livro == null)
             {
                 return NotFound($"Livro com ID {id} não encontrado");
             }
 
-            livros.Remove(livro);
+            _context.Livros.Remove(livro);
+            await _context.SaveChangesAsync();
+
             return NoContent();
         }
     }

@@ -14,10 +14,13 @@ x86/
 [Bb]in/
 [Oo]bj/
 
-# Visual Studio cache/options
 .vs/
 
-# Others
 *.log
 *.dll
 *.exe
+
+# Arquivos de configuração com senhas
+appsettings.json
+appsettings.Development.json
+appsettings.Production.json

@@ -1,26 +1,58 @@
 # User-specific files
+**/.vs/
+**/.vscode/
 *.suo
 *.user
 *.userosscache
 *.sln.docstates
+*.rsuser
 
 # Build results
+[Bb]in/
+[Oo]bj/
 [Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
 x64/
 x86/
-[Bb]in/
-[Oo]bj/
-
-.vs/
-
-*.log
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
 *.dll
 *.exe
+*.pdb
+*.cache
+*.log
 
 # Arquivos de configuração com senhas
-appsettings.json
-appsettings.Development.json
-appsettings.Production.json
+**/appsettings.json
+
+**/appsettings.Production.json
+**/appsettings.Staging.json
+
+
+# .NET
+**/bin/
+**/obj/
+
+# SQLite
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# SQL Server
+*.mdf
+*.ldf
+
+# Node.js / Frontend
+**/node_modules/
+dist/
+build/
+
+# Environment variables
+.env
+.env.local
+*.env
